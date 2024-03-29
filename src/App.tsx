@@ -1,90 +1,110 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import.meta.env.MODE;
+
+import { useEffect, useState } from "react";
+import "./App.css";
 
 // Access the environment variable correctly
-const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
-
-// Construct the API URL with the apiKey variable
-const apiUrl = `https://newsapi.org/v2/everything?q=Apple&from=2024-03-25&sortBy=popularity&apiKey=${apiKey}`;
+const apiKey = import.meta.env.VITE_SOME_KEY;
+const url = `https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=${apiKey}`;
 
 
-  interface Source {
-    id: null | string,
-    name: string
-  }
+/*
+ 
 
-  interface Article {
-    source: Source;
-    author: string;
-    title: string;
-    description: string;
-    url: string;
-    urlToImage?: string;
-    publishedAt: string;
-    content: string;
-    
-  }
-  interface NewsApiData {
-    status: string;
-    totalResults: number;
-    articles: Article[];
-  }
+ */
 
-async function fetchNewsData(apiUrl: string): Promise<NewsApiData> {
-  const response = await fetch(apiUrl);
+
+
+
+async function getTopHeadlinesFromBBC(url) {
+  const response = await fetch(url);
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
-  // TYPE GUARD
-  const data: NewsApiData = await response.json();
-  return data;
+  const data = await response.json();
+  return data; // Returning the data might be useful if this function is part of a larger application
+}
+
+type Source =  {
+  id: null | string;
+  name: string;
+}
+
+type Article =  {
+  source: Source;
+  author: string;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage: string;
+  publishedAt: string;
+  content: string;
+}
+
+type NewsApiData =  {
+  status: string;
+  totalResults: number;
+  articles: Article[];
 }
 
 
 
 
-function App() {
-  const [count, setCount] = useState(0)
 
+async function TypeScriptExample(url: string): Promise<NewsApiData> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
+
+
+
+/*
+-"source": {
+"id": "wired",
+"name": "Wired"
+},
+**/
+
+function App(): JSX.Element {
+  // Fetch the news data
+
+  useEffect(() => {
+    // getTopHeadlinesFromBBC(url)
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error(
+    //       "There was an error fetching the top headlines from BBC News",
+    //       error
+    //     );
+    //   });
+
+    TypeScriptExample(url)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(
+          "There was an error fetching the top headlines from BBC News",
+          error
+        );
+      });
+  }, []);
 
   // Define the Source interface
-  fetchNewsData(apiUrl).then((data) => {
-  
-
 
   /*
   used as Source type in api call
   **/
 
-
-
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div></div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
